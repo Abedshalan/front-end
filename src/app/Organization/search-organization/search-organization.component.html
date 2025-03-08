@@ -1,0 +1,64 @@
+<p-card header="Organization Definition">
+   
+  <div class="p-fluid">
+    <!-- Search Section -->
+    <div *ngIf="!isAddEditVisible">
+      <h3>Search Organizations</h3>
+      <div class="p-grid">
+        <div class="p-col-12 p-md-4">
+          <label for="organizationName">Organization Name</label>
+          <input id="organizationName" pInputText [(ngModel)]="searchParams.organizationName" />
+        </div>
+        <div class="p-col-12 p-md-4">
+          <label for="organizationCode">Organization Code</label>
+          <input id="organizationCode" pInputText [(ngModel)]="searchParams.organizationCode" />
+        </div>
+        <div class="p-col-12 p-md-4" style="display: flex; justify-content: flex-end; gap: 20px;">
+          <button pButton type="button" label="Search" (click)="onSearch()" style="width: 10%;float: right"></button>
+          <button
+          pButton
+          type="button"
+          label="Add New Organization"
+          (click)="showAddEditSection()"
+          *ngIf="!isAddEditVisible"
+          style="width: 14%;float:right;"
+        ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Organization List Section -->
+    <div *ngIf="!isAddEditVisible">
+      <h3>Organization List</h3>
+      <p-table [value]="organizations">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-organization>
+          <tr>
+            <td>{{ organization.code }}</td>
+            <td>{{ organization.name }}</td>
+            <td>{{ organization.phone }}</td>
+            <td>
+              <button pButton type="button" icon="pi pi-pencil" (click)="onEdit(organization)"></button>
+              <button pButton type="button" icon="pi pi-trash" (click)="onDelete(organization)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Add/Edit Organization Section -->
+    <div *ngIf="isAddEditVisible">
+      <app-add-update-organization
+        [organization]="selectedOrganization"
+        (cancel)="hideAddEditSection()"
+      ></app-add-update-organization>
+    </div>
+  </div>
+</p-card>

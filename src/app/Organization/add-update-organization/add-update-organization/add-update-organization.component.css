@@ -1,0 +1,17 @@
+/* Add custom styles for form fields */
+.p-field label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  
+  .p-field input,
+  .p-field textarea,
+  .p-field .p-autocomplete {
+    width: 10%;
+  }
+  
+  /* Add spacing between form fields */
+  .p-field {
+    margin-bottom: 1.5rem;
+  }
