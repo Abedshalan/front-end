@@ -1,41 +1,62 @@
-<p-card header="Organization Definition">
-   
+<p-card>
+  <!-- Header Section with Back Button -->
+  <ng-template pTemplate="header">
+    <div class="header-container">
+      <span class="header-text">
+        <i class="pi pi-building" style="margin-right: 10px;"></i>
+        Organization Inquiry
+      </span>      <button pButton type="button" icon="pi pi-home" class="p-button-rounded p-button-text" (click)="goToHome()"></button>
+    </div>
+  </ng-template>
   <div class="p-fluid">
     <!-- Search Section -->
     <div *ngIf="!isAddEditVisible">
       <h3>Search Organizations</h3>
-      <div class="p-grid">
-        <div class="p-col-12 p-md-4">
-          <label for="organizationName">Organization Name</label>
-          <input id="organizationName" pInputText [(ngModel)]="searchParams.organizationName" />
+      
+      <div class="search-container">
+        <!-- Inputs in One Row -->
+        <div class="input-group">
+          <div class="input-field">
+            <label for="organizationName">Organization Name</label>
+            <input id="organizationName" type="text" [(ngModel)]="searchParams.organizationName">
+          </div>
+          <div class="input-field">
+            <label for="organizationCode">Organization Code</label>
+            <input id="organizationCode" type="text" [(ngModel)]="searchParams.organizationCode">
+          </div>
+          <div class="input-field">
+            <label for="country">Country</label>
+            <p-autoComplete
+            id="country" 
+            [(ngModel)]="searchParams.country"
+            [suggestions]="filteredCountries"
+            optionLabel="name"
+            (completeMethod)="filterCountries($event)"
+            (onSelect)="onCountrySelect($event)"
+            [dropdown]="true"
+            field="name"
+            [virtualScroll]="true"
+            [virtualScrollItemSize]="34"
+          ></p-autoComplete>        
+          </div>
         </div>
-        <div class="p-col-12 p-md-4">
-          <label for="organizationCode">Organization Code</label>
-          <input id="organizationCode" pInputText [(ngModel)]="searchParams.organizationCode" />
-        </div>
-        <div class="p-col-12 p-md-4" style="display: flex; justify-content: flex-end; gap: 20px;">
-          <button pButton type="button" label="Search" (click)="onSearch()" style="width: 10%;float: right"></button>
-          <button
-          pButton
-          type="button"
-          label="Add New Organization"
-          (click)="showAddEditSection()"
-          *ngIf="!isAddEditVisible"
-          style="width: 14%;float:right;"
-        ></button>
-        </div>
+           <div class="button-group">
+            <button class="btn custom-btn" (click)="onSearch()">Search</button>
+            <button class="btn custom-btn" (click)="showAddEditSection()">Add New Organization</button>
+          </div>
       </div>
+      
     </div>
 
-    <!-- Organization List Section -->
+    <!-- Organization List -->
     <div *ngIf="!isAddEditVisible">
       <h3>Organization List</h3>
-      <p-table [value]="organizations">
+      <p-table [value]="organizations" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 20]">
         <ng-template pTemplate="header">
           <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Phone</th>
+            <th pSortableColumn="code">Code <p-sortIcon field="code"></p-sortIcon></th>
+            <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="phone">Phone <p-sortIcon field="phone"></p-sortIcon></th>
             <th>Actions</th>
           </tr>
         </ng-template>
@@ -45,8 +66,10 @@
             <td>{{ organization.name }}</td>
             <td>{{ organization.phone }}</td>
             <td>
-              <button pButton type="button" icon="pi pi-pencil" (click)="onEdit(organization)"></button>
-              <button pButton type="button" icon="pi pi-trash" (click)="onDelete(organization)"></button>
+              <button pButton type="button" icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2"
+                (click)="onEdit(organization)"></button>
+              <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                (click)="onDelete(organization)"></button>
             </td>
           </tr>
         </ng-template>
@@ -55,10 +78,8 @@
 
     <!-- Add/Edit Organization Section -->
     <div *ngIf="isAddEditVisible">
-      <app-add-update-organization
-        [organization]="selectedOrganization"
-        (cancel)="hideAddEditSection()"
-      ></app-add-update-organization>
+      <app-add-update-organization [organization]="selectedOrganization!" (cancel)="hideAddEditSection()">
+      </app-add-update-organization>
     </div>
   </div>
 </p-card>

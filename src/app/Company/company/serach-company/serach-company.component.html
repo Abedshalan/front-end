@@ -1,0 +1,85 @@
+<p-card>
+    <!-- Header Section with Back Button -->
+    <ng-template pTemplate="header">
+      <div class="header-container">
+        <span class="header-text">
+          <i class="pi pi-building" style="margin-right: 10px;"></i>
+          Company Inquiry
+        </span>      <button pButton type="button" icon="pi pi-home" class="p-button-rounded p-button-text" (click)="goToHome()"></button>
+      </div>
+    </ng-template>
+    <div class="p-fluid">
+      <!-- Search Section -->
+      <div *ngIf="!isAddEditVisible">
+        <h3>Search Company</h3>
+        
+        <div class="search-container">
+          <!-- Inputs in One Row -->
+          <div class="input-group">
+            <div class="input-field">
+              <label for="organizationName">Organization Name</label>
+              <input id="organizationName" type="text" [(ngModel)]="searchParams.organizationName">
+            </div>
+            <div class="input-field">
+              <label for="organizationCode">Organization Code</label>
+              <input id="organizationCode" type="text" [(ngModel)]="searchParams.organizationCode">
+            </div>
+            <div class="input-field">
+              <label for="country">Country</label>
+              <p-autoComplete
+              id="country" 
+              [(ngModel)]="searchParams.country"
+              [suggestions]="filteredCountries"
+              optionLabel="name"
+              (completeMethod)="filterCountries($event)"
+              (onSelect)="onCountrySelect($event)"
+              [dropdown]="true"
+              field="name"
+              [virtualScroll]="true"
+              [virtualScrollItemSize]="34"
+            ></p-autoComplete>        
+            </div>
+          </div>
+             <div class="button-group">
+              <button class="btn custom-btn" (click)="onSearch()">Search</button>
+              <button class="btn custom-btn" (click)="showAddEditSection()">Add New Company</button>
+            </div>
+        </div>
+        
+      </div>
+  
+      <!-- Organization List -->
+      <div *ngIf="!isAddEditVisible">
+        <h3>Company List</h3>
+        <p-table [value]="companies" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 20]">
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="code">Code <p-sortIcon field="code"></p-sortIcon></th>
+              <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+              <th pSortableColumn="phone">Phone <p-sortIcon field="phone"></p-sortIcon></th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-company>
+            <tr>
+              <td>{{ company.code }}</td>
+              <td>{{ company.name }}</td>
+              <td>{{ company.phone }}</td>
+              <td>
+                <button pButton type="button" icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2"
+                  (click)="onEdit(company)"></button>
+                <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                  (click)="onDelete(company)"></button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <!-- Add/Edit Organization Section -->
+      <div *ngIf="isAddEditVisible">
+        <app-add-update-company [company]="selectedCompany!" (cancel)="hideAddEditSection()">
+        </app-add-update-company>
+      </div>
+    </div>
+  </p-card>
+  

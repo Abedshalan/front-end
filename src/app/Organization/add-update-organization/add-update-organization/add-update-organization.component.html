@@ -2,63 +2,62 @@
   <!-- Header Section -->
   <div style="display: flex; justify-content: space-between; align-items: center;">
     <h2>{{ organizationName || 'New Organization' }}</h2>
-    <button pButton type="button" label="Back to Organizations" (click)="onBack()"></button>
+    <div class="button-group">
+      <button class="btn custom-btn" (click)="onBack()">Back to Organizations</button>
+    </div>
   </div>
 
-  <!-- Form Section -->
   <div class="p-fluid">
     <form [formGroup]="organizationForm">
-      <!-- First Row -->
       <div class="p-grid">
-        <!-- Organization Name -->
         <div class="p-col-12 p-md-6 p-lg-3">
           <div class="p-field">
-            <label for="organizationName">Organization Name</label>
+            <label for="organizationName">Organization Name <span class="required">*</span></label>
             <input id="organizationName" pInputText formControlName="organizationName" [(ngModel)]="organizationName" />
           </div>
         </div>
 
-        <!-- Organization Code -->
         <div class="p-col-12 p-md-6 p-lg-3">
           <div class="p-field">
-            <label for="organizationCode">Organization Code</label>
+            <label for="organizationCode">Organization Code <span class="required">*</span></label>
             <input id="organizationCode" pInputText formControlName="organizationCode" />
           </div>
         </div>
 
-        <!-- Country -->
         <div class="p-col-12 p-md-6 p-lg-3">
-          <div class="p-field">
-            <label for="country">Country</label>
+          <div class="p-field" style="width: 35%;">
+            <label for="country">Country <span class="required">*</span></label>
             <p-autoComplete
-              id="country"
+              id="country" 
               formControlName="country"
               [suggestions]="filteredCountries"
+              optionLabel="label"
               (completeMethod)="filterCountries($event)"
+              [dropdown]="true"
+              field="name"
+              [virtualScroll]="true"
+              [virtualScrollItemSize]="34"
             ></p-autoComplete>
           </div>
         </div>
-
-        <!-- Full Address -->
+        
         <div class="p-col-12 p-md-6 p-lg-3">
           <div class="p-field">
-            <label for="fullAddress">Full Address</label>
+            <label for="fullAddress">Full Address <span class="required">*</span></label>
             <textarea id="fullAddress" pInputTextarea formControlName="fullAddress" rows="4"></textarea>
           </div>
         </div>
       </div>
 
-      <!-- Second Row -->
       <div class="p-grid p-mt-3">
-        <!-- Phone -->
         <div class="p-col-12 p-md-6 p-lg-3">
           <div class="p-field">
-            <label for="phone">Phone</label>
-            <input id="phone" pInputText formControlName="phone" />
+            <label for="phone">Phone <span class="required">*</span></label>
+            <input id="phone" pInputText
+            type="number"formControlName="phone" />
           </div>
         </div>
 
-        <!-- Creation Date -->
         <div class="p-col-12 p-md-6 p-lg-3">
           <div class="p-field">
             <label for="creationDate">Creation Date</label>
@@ -66,7 +65,6 @@
           </div>
         </div>
 
-        <!-- Updating Date -->
         <div class="p-col-12 p-md-6 p-lg-3">
           <div class="p-field">
             <label for="updatingDate">Updating Date</label>
@@ -74,19 +72,18 @@
           </div>
         </div>
 
-        <!-- Empty Column (to maintain 4 columns) -->
         <div class="p-col-12 p-md-6 p-lg-3">
-          <!-- Empty space to maintain layout -->
+          <!-- Empty space to maintain layout --> 
         </div>
       </div>
 
       <!-- Save and Cancel Buttons -->
-      <div class="p-grid p-mt-3">
-        <div class="p-col-12">
-          <button pButton type="button" label="Save" (click)="onSave()" class="p-mr-2"></button>
-          <button pButton type="button" label="Cancel" (click)="onCancel()"></button>
+
+        <div class="button-group">
+          <button *ngIf="organization == null" class="btn custom-btn" (click)="onSave()" [disabled]="!organizationForm.valid">Save</button>
+          <button *ngIf="organization != null" class="btn custom-btn" (click)="onUpdate()" [disabled]="!organizationForm.valid">Update</button>
+          <button class="btn custom-btn" (click)="onCancel()">Cancel</button>
         </div>
-      </div>
     </form>
   </div>
 </p-card>

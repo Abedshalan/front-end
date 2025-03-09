@@ -1,17 +1,64 @@
-/* Add custom styles for form fields */
 .p-field label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    display: block;
-  }
-  
-  .p-field input,
-  .p-field textarea,
-  .p-field .p-autocomplete {
-    width: 10%;
-  }
-  
-  /* Add spacing between form fields */
-  .p-field {
-    margin-bottom: 1.5rem;
-  }
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Set consistent width for all controls */
+.p-field input,
+.p-field textarea {
+  width: 35%; /* Adjust width as needed */
+  height: 35px; /* Increase height of input controls */
+  padding: 8px; /* Add padding for better spacing */
+  font-size: 16px; /* Adjust font size for better readability */
+  box-sizing: border-box; /* Ensure padding is included in the height */
+}
+
+/* Add spacing between form fields */
+.p-field {
+  margin-bottom: 1rem;
+}
+
+/* Adjust the width of the AutoComplete dropdown panel */
+.p-autocomplete-panel {
+  width: 35%; 
+}
+.required {
+  color: red; /* Makes the asterisk red */
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 10px;
+  width: 100%; /* Ensure buttons take full row width */
+}
+.custom-btn {
+  background-color: #2196F3; /* Set the background color */
+  color: white; /* Set text color to white */
+  border: none;
+  padding: 10px 20px; /* Add padding for better size */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px; /* Larger font for readability */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+}
+
+/* Hover Effect for Buttons */
+.custom-btn:hover {
+  background-color: #1976D2; /* Darker shade of blue */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Focus Effect for Buttons */
+.custom-btn:focus {
+  outline: none; /* Remove default focus outline */
+  box-shadow: 0 0 5px rgba(33, 150, 243, 0.8); /* Subtle glow on focus */
+}
+
+button:disabled, 
+.custom-btn:disabled {
+  background-color: #ccc !important; /* Gray out the button */
+  cursor: not-allowed !important; /* Show disabled cursor */
+  opacity: 0.6 !important; /* Make it look visually disabled */
+}

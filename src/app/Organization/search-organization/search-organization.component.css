@@ -1,0 +1,83 @@
+.search-container {
+  display: flex;
+  flex-direction: column; /* Stack inputs and buttons */
+  gap: 10px;
+  width: 100%;
+}
+
+.input-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  width: 70%;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.input-field input,
+.p-autocomplete input {
+  height: 38px;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 10px;
+  width: 100%; /* Ensure buttons take full row width */
+}
+.custom-btn {
+  background-color: #2196F3; /* Set the background color */
+  color: white; /* Set text color to white */
+  border: none;
+  padding: 10px 20px; /* Add padding for better size */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px; /* Larger font for readability */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+}
+
+/* Hover Effect for Buttons */
+.custom-btn:hover {
+  background-color: #1976D2; /* Darker shade of blue */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Focus Effect for Buttons */
+.custom-btn:focus {
+  outline: none; /* Remove default focus outline */
+  box-shadow: 0 0 5px rgba(33, 150, 243, 0.8); /* Subtle glow on focus */
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f9fa; /* Light background for the header */
+  border-bottom: 1px solid #dee2e6; /* Subtle border */
+}
+
+.header-text {
+  font-size: 24px; /* Larger font size */
+  font-weight: 600; /* Semi-bold */
+  color: #2c3e50; /* Dark color for contrast */
+  letter-spacing: 1px; /* Spacing between letters */
+  text-transform: uppercase; /* Uppercase text */
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.header-text:hover {
+  color: #3498db; /* Change color on hover */
+}
+
+.pi-building {
+  color: #3498db; /* Icon color */
+  font-size: 26px; /* Icon size */
+}

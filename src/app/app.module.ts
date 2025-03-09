@@ -22,9 +22,15 @@ import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
 import { CandidatesComponent } from './Candidates /candidates/candidates.component';
 import { OrganizationsComponent } from './Organization/organizations/organizations.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { PaginatorModule } from 'primeng/paginator';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { SerachCompanyComponent } from './Company/company/serach-company/serach-company.component';
+import { AddUpdateCompanyComponent } from './Company/company/add-update-company/add-update-company.component';
 
- 
+
 @NgModule({
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [
     AppComponent,
     CompanyComponent,
@@ -32,6 +38,8 @@ import { OrganizationsComponent } from './Organization/organizations/organizatio
     SearchOrganizationComponent,
     CandidatesComponent,
     OrganizationsComponent,
+    SerachCompanyComponent,
+    AddUpdateCompanyComponent,
     
   ],
   imports: [
@@ -49,9 +57,12 @@ import { OrganizationsComponent } from './Organization/organizations/organizatio
     ToastModule,
     MessagesModule,
     TabViewModule,
-    TableModule
+    TableModule,
+    PaginatorModule,
+    NgxSpinnerModule.forRoot(),
       ],
-      providers: [ConfirmationService,MessageService],
+      providers: [ConfirmationService,MessageService,
+        MessagesModule,],
       bootstrap: [AppComponent]
 })
 export class AppModule { }
