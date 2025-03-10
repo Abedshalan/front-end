@@ -1,0 +1,94 @@
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three columns per row */
+    gap: 15px; /* Space between fields */
+    width: 100%;
+    overflow: visible !important; /* Ensure dropdown is not clipped */
+    position: relative; /* Ensure dropdown is positioned relative to the grid */
+}
+/* Input field styling for uniform appearance */
+.input-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-field label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.input-field input,
+.input-field textarea,
+.p-autocomplete input {
+    height: 38px;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+/* Ensure consistent AutoComplete dropdown width */
+.p-autocomplete-panel {
+    z-index: 1000 !important; /* Ensure it appears above other elements */
+    position: absolute !important;
+    top: 100% !important; /* Position dropdown below the input */
+    left: 0 !important;
+    width: 100% !important; /* Match the width of the input field */
+    max-height: 200px !important; /* Set a max height for the dropdown */
+    overflow-y: auto !important; /* Add scroll if content exceeds max height */
+    background-color: white !important; /* Ensure background is visible */
+    border: 1px solid #ccc !important; /* Add border for visibility */
+    border-radius: 5px !important; /* Match the input field's border radius */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important; /* Add shadow for better visibility */
+}
+
+/* Required field indicator */
+.required {
+    color: red;
+}
+
+/* Button Group Styling */
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Styling for Custom Buttons */
+.custom-btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.custom-btn:hover {
+    background-color: #1976D2;
+    transform: translateY(-2px);
+}
+
+.custom-btn:disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+}
+
+/* Responsive Design for Smaller Screens */
+@media screen and (max-width: 1024px) {
+    .input-grid {
+        grid-template-columns: repeat(2, 1fr); /* Two fields per row on medium screens */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .input-grid {
+        grid-template-columns: repeat(1, 1fr); /* Single column layout on smaller screens */
+    }
+}
+

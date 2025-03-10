@@ -81,3 +81,13 @@
     color: #3498db; /* Icon color */
     font-size: 26px; /* Icon size */
   }
+
+  .custom-btn:disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+}
+
+.required {
+  color: red;
+}

@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
+import { AutoComplete } from 'primeng/autocomplete';
 import { PaginatorState } from 'primeng/paginator';
-import { Company } from 'src/app/models/model';
+import { Company, SelectItem } from 'src/app/models/model';
 import { CommonService } from 'src/app/Services/common-service.service';
 import { CompanyService } from 'src/app/Services/company.service';
+import { OrganizationService } from 'src/app/Services/organization.service';
 
 @Component({
   selector: 'app-serach-company',
@@ -13,11 +15,16 @@ import { CompanyService } from 'src/app/Services/company.service';
   styleUrls: ['./serach-company.component.css']
 })
 export class SerachCompanyComponent implements OnInit{
+  @ViewChild('autoCompleteRef') autoCompleteRef!: AutoComplete;
+
+  searchForm!:FormGroup;
   companies: Company[] = [];
   searchParams = {
-    organizationName: '',
-    organizationCode: '',
-    country:''
+    organizationName:'',
+    companyName: '',
+    companyCode: '',
+    country:'',
+    organizationId:null
   };
   isAddEditVisible = false;
   selectedCompany: Company | null = null;
@@ -38,16 +45,38 @@ export class SerachCompanyComponent implements OnInit{
   // Sorting
   sortField: keyof Company = 'name'; // Default sort field
   sortOrder: number = 1; // 1 for ASC, -1 for DESC
-
+  filteredOrganizations: SelectItem[] = [];
+  organizatioList: SelectItem[] = []; // List of organizations from the API
+  selectedOrganization: any = null;
    constructor(
       private fb: FormBuilder,
       private confirmationService: ConfirmationService, private cs:CommonService,
-      private router: Router,private companyService:CompanyService
+      private router: Router,private companyService:CompanyService,private organizationService:OrganizationService
     ) {}
   
     ngOnInit(): void {
+      this.createForm();
+      this.loadOrganizationsSuggest();
       this.loadOrganizations();
+      this.bindEvents();
     }
+    bindEvents() {
+      const searchFormCtrls = (<any>this.searchForm).controls;
+      const organizationName$ = searchFormCtrls.organizationName.valueChanges;
+
+      organizationName$.subscribe((change: string | null) => {
+        if (change === "") {
+          this.searchParams.organizationId=null;
+        }});
+    }
+
+     createForm(){
+        this.searchForm = this.fb.group({
+          organizationName: ['', Validators.required],
+          companyCode:'',
+          companyName:''
+        });
+      }
 
   // Show the add/edit section
   showAddEditSection() {
@@ -63,27 +92,26 @@ export class SerachCompanyComponent implements OnInit{
   }
 
   loadOrganizations(): void {
-    // this.cs.showOrHideSpinner(true);
-    // this.companyService
-    //   .Get(
-    //     this.searchParams.organizationName.trim(),
-    //     this.searchParams.organizationCode.trim(),
-    //     this.searchParams.country, 
-    //     this.pageNumber,
-    //     this.pageSize
-    //   )
-    //   .subscribe({
-    //     next: (result) => {
-    //       this.organizations = result.data;
-    //       this.totalCount = result.totalCount;
-    //       this.totalPages = result.totalPages;
-    //       this.cs.showOrHideSpinner(false);
-    //     },
-    //     error: (error) => {
-    //       console.error('Error loading organizations:', error);
-    //       this.cs.showOrHideSpinner(false);
-    //     }
-    //   });
+    this.cs.showOrHideSpinner(true);
+    this.companyService.GetCompanyByCriteria(
+        this.searchParams.companyName.trim(),
+        this.searchParams.companyCode.trim(),
+        this.searchParams.country, 
+        this.searchParams.organizationId!,
+        this.pageNumber,
+        this.pageSize
+      ).subscribe({
+        next: (result) => {
+          this.companies = result.data;
+          this.totalCount = result.totalCount;
+          this.totalPages = result.totalPages;
+          this.cs.showOrHideSpinner(false);
+        },
+        error: (error) => {
+          console.error('Error loading organizations:', error);
+          this.cs.showOrHideSpinner(false);
+        }
+      });
     }
 
     filterCountries(event: any) {
@@ -94,11 +122,11 @@ export class SerachCompanyComponent implements OnInit{
     }
 
   onSort(event: any): void {
-    // this.organizations.sort((a, b) => {
-    //   if (a.name < b.name) return -1;
-    //   if (a.name > b.name) return 1;
-    //   return 0;
-    // });
+    this.companies.sort((a, b) => {
+      if (a.name < b.name) return -1;
+      if (a.name > b.name) return 1;
+      return 0;
+    });
   }
 
   // Update the country directly when selected
@@ -125,37 +153,65 @@ export class SerachCompanyComponent implements OnInit{
 
   // Delete an organization
   onDelete(organization: Company) {
-    // this.confirmationService.confirm({
-    //   message: 'Are you sure you want to delete the selected record',
-    //   acceptLabel: 'Yes', 
-    //   rejectLabel: 'No',
-    //   accept: () => {
-    //     this.organizationService.deleteOrganization(organization.id).subscribe(response=>{
-    //       if(response.succeeded){
-    //         this.cs.pushMessage('success', "Success", response.msg!)
-    //         this.onSearch();
-    //       }else{
-    //         this.cs.showOrHideSpinner(false);
-    //       }
-    //     } , err => {
-    //       this.cs.showOrHideSpinner(false);
-    //       this.cs.pushMessage('error', "Error", err);
-    //     })
-    //   },
-    //   reject: () => {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete the selected record',
+      acceptLabel: 'Yes', 
+      rejectLabel: 'No',
+      accept: () => {
+        this.companyService.deleteCompany(organization.id).subscribe(response=>{
+          if(response.succeeded){
+            this.cs.pushMessage('success', "Success", response.msg!)
+            this.onSearch();
+          }else{
+            this.cs.showOrHideSpinner(false);
+          }
+        } , err => {
+          this.cs.showOrHideSpinner(false);
+          this.cs.pushMessage('error', "Error", err);
+        })
+      },
+      reject: () => {
         
-    //   },
-    // });
+      },
+    });
   }
+
+  filterOrganizations(event: any) {
+    const query = event.query; // Get the user's input
+    this.filteredOrganizations = this.organizatioList.filter((org) =>
+      org.label.toLowerCase().includes(query.toLowerCase()))
+}
+
+  loadOrganizationsSuggest() {
+    this.organizationService.GetOrganizationSuggest().subscribe((response) => {
+      if(response.succeeded){
+        this.organizatioList = response.data;
+      }
+        });
+}
+
+onOrganizationSelect(event: any) {
+  if (event && event.value) {
+    this.searchParams.organizationId = event.value.value;
+  }
+}
 
   goToHome(){
     this.router.navigate(['/candidates']);  
   }
   // Search organizations
   onSearch() {
+    this.setSerchModel();
     this.cs.showOrHideSpinner(true);
     this.pageNumber = 1; // Reset to the first page when searching
     this.loadOrganizations();
+  }
+
+  setSerchModel(){
+    const formValues = this.searchForm.value;
+    this.searchParams.organizationId = formValues.organizationName.value; 
+    this.searchParams.companyName = formValues.companyName; 
+    this.searchParams.companyCode = formValues.companyCode; 
 
   }
 
@@ -165,5 +221,11 @@ export class SerachCompanyComponent implements OnInit{
     this.pageSize = paginatorState.rows!; // Update page size
     this.loadOrganizations();
   }
+
+   // Clear the selected organization
+   clearSelectedOrganization() {
+    this.searchForm.get('organizationName')!.setValue(null); // Clear the form control
+    this.filteredOrganizations = []; // Clear the filtered list (optional)
+}
 
 }

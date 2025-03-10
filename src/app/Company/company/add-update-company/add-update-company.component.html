@@ -1,1 +1,83 @@
-<p>add-update-company works!</p>
+<p-card>
+    <!-- Header Section -->
+    <div class="header-container">
+        <h2>{{ companyName || 'New Company' }}</h2>
+        <div class="button-group">
+            <button class="btn custom-btn" (click)="onBack()">Back to Company</button>
+        </div>
+    </div>
+
+    <div class="p-fluid">
+        <form [formGroup]="companyForm">
+            <div class="input-grid">
+                <!-- First Row -->
+                <div class="input-field">
+                    <label for="organizationName">Organization Name <span class="required">*</span></label>
+                    <p-autoComplete
+                    id="organizationName"
+                    formControlName="organizationName"
+                    [suggestions]="filteredOrganizations"
+                    (completeMethod)="filterOrganizations($event)"
+                    (onSelect)="onOrganizationSelect($event)"
+                    field="label" 
+                    [dropdown]="true"
+                ></p-autoComplete>
+                </div>
+                <div class="button-group">
+                    <button style="margin-right: 60%;"
+                        class="btn custom-btn"
+                        (click)="getOrganizationDetails()"
+                        [disabled]="!selectedOrganization">
+                        Get Organization Details
+                    </button>
+                </div>
+                <div class="input-field">
+                    <label for="companyName">Company Name <span class="required">*</span></label>
+                    <input id="companyName" pInputText formControlName="companyName" [(ngModel)]="companyName" />
+                </div>
+
+                <div class="input-field">
+                    <label for="companyCode">Company Code <span class="required">*</span></label>
+                    <input id="companyCode" pInputText formControlName="companyCode" />
+                </div>
+
+                <div class="input-field">
+                    <label for="country">Country <span class="required">*</span></label>
+                    <p-autoComplete id="country" formControlName="country" [suggestions]="filteredCountries"
+                        optionLabel="label" (completeMethod)="filterCountries($event)" [dropdown]="true" field="name"
+                        [virtualScroll]="true" [virtualScrollItemSize]="34">
+                    </p-autoComplete>
+                </div>
+
+                <!-- Second Row -->
+                <div class="input-field">
+                    <label for="phone">Phone <span class="required">*</span></label>
+                    <input id="phone" pInputText type="number" formControlName="phone" />
+                </div>
+
+                <div class="input-field">
+                    <label for="fullAddress">Full Address <span class="required">*</span></label>
+                    <textarea id="fullAddress" pInputTextarea formControlName="fullAddress" rows="2"></textarea>
+                </div>
+
+                <div class="input-field">
+                    <label for="creationDate">Creation Date</label>
+                    <input id="creationDate" pInputText formControlName="creationDate" />
+                </div>
+
+                <div class="input-field">
+                    <label for="updatingDate">Updating Date</label>
+                    <input id="updatingDate" pInputText formControlName="updatingDate" />
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button *ngIf="company == null" class="btn custom-btn" (click)="onSave()"
+                    [disabled]="!companyForm.valid">Save</button>
+                <button *ngIf="company != null" class="btn custom-btn" (click)="onUpdate()"
+                    [disabled]="!companyForm.valid">Update</button>
+                <button class="btn custom-btn" (click)="onCancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</p-card>

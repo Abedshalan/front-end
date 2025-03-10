@@ -12,11 +12,16 @@ export class Organization {
   
   export class Company {
     id?: number;
-    creationDate?: string;
-    updatingDate?: string;
+    creationDate!: string;
+    updatingDate!: string;
     name!: string;
     organizationId!: number;
-    organization?: string;
+    code!: string;
+    country!: string;
+    phone!: string;
+    fullAddress!: string;
+    organization: Organization | undefined = new Organization();
+    organizationName!:string;
   }
   export class ResponseResult<T>{
     succeeded?: boolean;
@@ -31,4 +36,8 @@ export class Organization {
     totalPages?: number;
     pageSize?: number;
   }
-  
+  export class SelectItem
+	{
+       label!:string
+       value!:string
+  }

@@ -14,15 +14,16 @@
         <h3>Search Company</h3>
         
         <div class="search-container">
+          <form [formGroup]="searchForm">
           <!-- Inputs in One Row -->
           <div class="input-group">
             <div class="input-field">
-              <label for="organizationName">Organization Name</label>
-              <input id="organizationName" type="text" [(ngModel)]="searchParams.organizationName">
+              <label for="companyName">Company Name</label>
+              <input id="companyName" type="text" [(ngModel)]="searchParams.companyName" formControlName="companyName">
             </div>
             <div class="input-field">
-              <label for="organizationCode">Organization Code</label>
-              <input id="organizationCode" type="text" [(ngModel)]="searchParams.organizationCode">
+              <label for="companyCode">Company Code</label>
+              <input id="companyCode" type="text" [(ngModel)]="searchParams.companyCode" formControlName="companyCode">
             </div>
             <div class="input-field">
               <label for="country">Country</label>
@@ -39,13 +40,28 @@
               [virtualScrollItemSize]="34"
             ></p-autoComplete>        
             </div>
+            <div class="input-field">
+                <label for="organizationName">Organization Name <span class="required">*</span> </label>
+                <p-autoComplete
+                #autoCompleteRef
+                id="organizationName"
+                formControlName="organizationName"
+                [(ngModel)]="selectedOrganization"
+                [suggestions]="filteredOrganizations"
+                (completeMethod)="filterOrganizations($event)"
+                (onSelect)="onOrganizationSelect($event)"
+                field="label" 
+                [dropdown]="true"
+            ></p-autoComplete>
+        
+            </div>
           </div>
              <div class="button-group">
-              <button class="btn custom-btn" (click)="onSearch()">Search</button>
+              <button class="btn custom-btn" (click)="onSearch()" [disabled]="!searchForm.valid">Search</button>
               <button class="btn custom-btn" (click)="showAddEditSection()">Add New Company</button>
             </div>
+          </form>
         </div>
-        
       </div>
   
       <!-- Organization List -->
@@ -54,14 +70,16 @@
         <p-table [value]="companies" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 20]">
           <ng-template pTemplate="header">
             <tr>
+              <th pSortableColumn="organizationName">Organization Name <p-sortIcon field="organizationName"></p-sortIcon></th>
               <th pSortableColumn="code">Code <p-sortIcon field="code"></p-sortIcon></th>
-              <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+              <th pSortableColumn="name">Company Name <p-sortIcon field="companyName"></p-sortIcon></th>
               <th pSortableColumn="phone">Phone <p-sortIcon field="phone"></p-sortIcon></th>
               <th>Actions</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-company>
             <tr>
+              <td>{{ company.organizationName }}</td>
               <td>{{ company.code }}</td>
               <td>{{ company.name }}</td>
               <td>{{ company.phone }}</td>

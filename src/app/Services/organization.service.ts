@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Organization, PagedResult, ResponseResult } from '../models/model';
+import { Organization, PagedResult, ResponseResult, SelectItem } from '../models/model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,11 +30,9 @@ export class OrganizationService {
   }
   
   getOrganizationById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+    return this.http.get<ResponseResult<Organization>>(`${this.apiUrl}/${id}`);
   }
-  // addOrganization(org: Organization): Observable<Organization> {
-  //   return this.http.post(this.apiUrl, org);
-  // }
+  
   addOrganization(entity: Organization): Observable<ResponseResult<Organization>> {
     return this.http.post<ResponseResult<Organization>>(this.apiUrl, entity, { headers: this.httpHeaders, responseType: 'json' })
       .pipe(
@@ -55,4 +53,10 @@ export class OrganizationService {
   deleteOrganization(id?: number): Observable<any> {
     return this.http.delete<ResponseResult<Organization>>(`${this.apiUrl}/${id}`);
   }
+
+  GetOrganizationSuggest(
+  ): Observable<ResponseResult<SelectItem>> {
+    return this.http.get<ResponseResult<SelectItem>>(`${this.apiUrl}/organization-suggest`);
+  }
+  
 }

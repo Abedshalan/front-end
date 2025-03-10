@@ -64,7 +64,7 @@ countries = [
     this.organizationForm.patchValue({
       organizationCode: this.organization.code,
       country: this.organization.country,
-      phone: this.organization.phone,
+      phone: this.organization.phone.toString(),
       fullAddress: this.organization.fullAddress,
       creationDate: this.organization.creationDate,
       updatingDate: this.organization.updatingDate
@@ -153,7 +153,7 @@ countries = [
     const formValues = this.organizationForm.value;
     this.organizationModel.name = formValues.organizationName; 
     this.organizationModel.code = formValues.organizationCode; 
-    this.organizationModel.country = formValues.country.name; 
+    this.organizationModel.country = formValues.country.name == undefined?formValues.country:formValues.country.name; 
     this.organizationModel.phone = String(formValues.phone); 
     this.organizationModel.fullAddress = formValues.fullAddress; 
     this.organizationModel.companies = [];
